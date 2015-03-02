@@ -68,6 +68,18 @@ describe Mustermann::Express do
     it { should_not expand }
 
     it { should generate_template('/{foo}') }
+
+    example do
+      pattern.params('/bar') do |params|
+        params.should be == {"foo" => "bar"}
+        :ok
+      end.should be == :ok
+    end
+    example do
+      pattern.params('/foo/bar') do |params|
+        raise "shouldn't get here"
+      end.should be_nil
+    end
   end
 
   pattern '/:foo+' do

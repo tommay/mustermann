@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'support'
 require 'mustermann/template'
 
@@ -78,6 +79,23 @@ describe Mustermann::Template do
     it { should_not match('/path%20with%20spaces') }
     it { should_not match('/path%2Bwith%2Bspaces') }
     it { should_not match('/path+with+spaces')     }
+  end
+
+  context 'params with block' do
+    pattern '/hello/{person}' do
+      example do
+        pattern.params('/hello/Frank') do |params|
+          params.should be == {'person' => 'Frank'}
+          :ok
+        end.should be == :ok
+      end
+
+      example do
+        pattern.params('/goodbye/Frank') do |params|
+          raise "shouldn't get here"
+        end.should be_nil
+      end
+    end
   end
 
   context 'level 1' do

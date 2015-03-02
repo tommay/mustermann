@@ -74,7 +74,18 @@ describe Mustermann::Concat do
 
   describe :params do
     example { pattern.params("/foo/bar")  .should be == { "foo" => "foo", "bar" => "bar" }}
+    example do
+      pattern.params("/foo/bar") do |params|
+        params.should be == { "foo" => "foo", "bar" => "bar" }
+        :ok
+      end.should be == :ok
+    end
     example { pattern.params("/foo/bar/") .should be_nil }
+    example do
+      pattern.params("/foo/bar/") do |params|
+        raise "Shouldn't get here"
+      end.should be_nil
+    end
     example { pattern.params("/foo")      .should be_nil }
   end
 

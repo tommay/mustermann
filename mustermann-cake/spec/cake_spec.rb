@@ -68,6 +68,18 @@ describe Mustermann::Cake do
     it { should_not expand }
 
     it { should generate_template('/{foo}') }
+
+    example do
+      pattern.params('/foo') do |params|
+        params.should be == {"foo" => "foo"}
+        :ok
+      end.should be == :ok
+    end
+    example do
+      pattern.params('') do |params|
+        raise "shouldn't get here"
+      end.should be_nil
+    end
   end
 
   pattern '/*' do

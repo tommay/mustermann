@@ -40,8 +40,25 @@ describe Mustermann::Composite do
 
     describe :params do
       example { subject.params("/foo/bar") .should be == { "name"  => "bar" }                    }
+      example do
+        subject.params("/foo/bar") do |params|
+          params.should be == { "name"  => "bar" }
+          :ok
+        end.should be == :ok
+      end
       example { subject.params("/fox/bar") .should be == { "first" => "fox", "second" => "bar" } }
+      example do
+        subject.params("/fox/bar") do |params|
+          params.should be == { "first" => "fox", "second" => "bar" }
+          :ok
+        end.should be == :ok
+      end
       example { subject.params("/foo")     .should be_nil                                        }
+      example do
+        subject.params("/foo") do |params|
+          raise "shouldn't get here"
+        end.should be_nil
+      end
     end
 
     describe :=== do

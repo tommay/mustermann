@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'support'
 require 'mustermann/shell'
 
@@ -24,6 +25,19 @@ describe Mustermann::Shell do
     it { should     match('/foo')     }
     it { should_not match('/bar')     }
     it { should_not match('/foo.bar') }
+
+    example do
+      pattern.params('/foo') do |params|
+        params.should be == {}
+        :ok
+      end.should be == :ok
+    end
+
+    example do
+      pattern.params('/bar') do |params|
+        raise "shouldn't get here"
+      end.should be_nil
+    end
   end
 
   pattern '/foo/bar' do

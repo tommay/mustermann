@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'support'
 require 'mustermann/identity'
 
@@ -45,6 +46,19 @@ describe Mustermann::Identity do
     it { should match('/foo/bar')   }
     it { should match('/foo%2Fbar') }
     it { should match('/foo%2fbar') }
+
+    example do
+      pattern.params('/foo/bar') do |params|
+        params.should be == {}
+        :ok
+      end.should be == :ok
+    end
+
+    example do
+      pattern.params('/bar/foo') do |params|
+        raise "shouldn't get here"
+      end.should be_nil
+    end
   end
 
   pattern '/:foo' do

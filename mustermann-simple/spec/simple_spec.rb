@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'support'
 require 'mustermann/simple'
 require 'mustermann/visualizer'
@@ -58,7 +59,19 @@ describe Mustermann::Simple do
     it { should_not match('/foo%2fbar') }
 
     example { pattern.params('/bar/foo').should be == {"foo" => "bar", "bar" => "foo"} }
+    example do
+      pattern.params('/bar/foo') do |params|
+        params.should be == {"foo" => "bar", "bar" => "foo"}
+        :ok
+      end.should be == :ok
+    end
+
     example { pattern.params('').should be_nil }
+    example do
+      pattern.params('') do |params|
+        raise "shouldn't get here"
+      end.should be_nil
+    end
   end
 
   pattern '/hello/:person' do
