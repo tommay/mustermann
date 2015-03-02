@@ -49,8 +49,13 @@ module Mustermann
     end
 
     # @see Mustermann::Pattern#params
-    def params(string)
-      with_matching(string, :params)
+    def params(string, &block)
+      result = with_matching(string, :params)
+      if result && block
+        block.call(result)
+      else
+        result
+      end
     end
 
     # @see Mustermann::Pattern#match

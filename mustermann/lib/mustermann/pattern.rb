@@ -200,7 +200,15 @@ module Mustermann
 
     # @param [String] string the string to match against
     # @return [Hash{String: String, Array<String>}, nil] Sinatra style params if pattern matches.
-    def params(string = nil, captures: nil, offset: 0)
+    # If a block is given, invoke the block with Hash if match
+    # succeeds, so that you can write
+    #   pattern.params(str) {|params| ...}
+    # instead of
+    #   if params = pattern.params(str)
+    #     ...
+    #   end
+    # The return value is the block's return value in this case.
+    def params(string = nil, captures: nil, offset: 0, &block)
       return unless captures ||= match(string)
       params   = named_captures.map do |name, positions|
         values = positions.map { |pos| map_param(name, captures[pos + offset]) }.flatten
@@ -208,7 +216,12 @@ module Mustermann
         [name, values]
       end
 
-      Hash[params]
+      result = Hash[params]
+      if block
+        block.call(result)
+      else
+        result
+      end
     end
 
     # @note This method is only implemented by certain subclasses.

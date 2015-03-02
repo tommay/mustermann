@@ -51,9 +51,15 @@ module Mustermann
     end
 
     # @see Mustermann::Pattern#params
-    def params(string)
+    def params(string, &block)
       params, size = peek_params(string)
-      params if size == string.size
+      if size == string.size
+        if params && block
+          block.call(params)
+        else
+          params
+        end
+      end
     end
 
     # @see Mustermann::Pattern#peek_size
